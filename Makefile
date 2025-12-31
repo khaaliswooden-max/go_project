@@ -77,7 +77,7 @@ test-integration: check-ollama
 
 # Show current phase objectives
 learn:
-	@echo "=== Current Phase: 5 - Systems Programming ==="
+	@echo "=== Current Phase: 6 - Static Analysis ==="
 	@echo ""
 	@echo "Phase 1 Status: ✓ Complete"
 	@echo "  - Exercise 1.1: Retry with exponential backoff ✓"
@@ -98,29 +98,31 @@ learn:
 	@echo "  - Exercise 4.2: Zero-Allocation JSON Encoder ✓"
 	@echo "  - Exercise 4.3: Profiling Integration ✓"
 	@echo ""
-	@echo "=== Phase 5: Systems Programming ==="
+	@echo "Phase 5 Status: ✓ Complete"
+	@echo "  - Exercise 5.1: Memory Layout Analyzer ✓"
+	@echo "  - Exercise 5.2: Memory-Mapped File Reader ✓"
+	@echo "  - Exercise 5.3: CGO Integration (optional) ✓"
 	@echo ""
-	@echo "⚠️  WARNING: Phase 5 bypasses Go's safety guarantees!"
-	@echo "    Use these techniques only when absolutely necessary."
+	@echo "=== Phase 6: Static Analysis ==="
 	@echo ""
 	@echo "Learning Objectives:"
-	@echo "  1. unsafe package and memory layout"
-	@echo "  2. Memory-mapped files (mmap)"
-	@echo "  3. CGO and calling C libraries"
-	@echo "  4. Low-level optimization techniques"
+	@echo "  1. go/ast package for parsing Go code"
+	@echo "  2. go/types for type checking"
+	@echo "  3. Custom linter development"
+	@echo "  4. Code generation with templates"
 	@echo ""
 	@echo "Key Files:"
-	@echo "  - pkg/systems/unsafe.go           (Memory layout, pointers)"
-	@echo "  - pkg/systems/mmap.go             (Memory-mapped files)"
-	@echo "  - pkg/systems/cgo.go              (CGO integration)"
-	@echo "  - docs/PHASE5_LEARNING.md         (Learning guide)"
+	@echo "  - pkg/analysis/ast.go            (AST parsing, traversal)"
+	@echo "  - pkg/analysis/linter.go         (Custom linter rules)"
+	@echo "  - pkg/analysis/generator.go      (Code generation)"
+	@echo "  - docs/PHASE6_LEARNING.md        (Learning guide)"
 	@echo ""
 	@echo "Exercises:"
-	@echo "  5.1: Memory Layout Analyzer"
-	@echo "  5.2: Memory-Mapped File Reader"
-	@echo "  5.3: CGO Integration (optional - requires C compiler)"
+	@echo "  6.1: AST Explorer"
+	@echo "  6.2: Custom Linter"
+	@echo "  6.3: Mock Generator"
 	@echo ""
-	@echo "Run 'make exercise-5-1' to start Exercise 5.1"
+	@echo "Run 'make exercise-6-1' to start Exercise 6.1"
 
 learn-phase1:
 	@echo "=== Phase 1: Foundations (Complete) ==="
@@ -376,7 +378,7 @@ learn-phase4:
 	@echo "  - docs/PHASE4_LEARNING.md        (Learning guide)"
 
 learn-phase5:
-	@echo "=== Phase 5: Systems Programming ==="
+	@echo "=== Phase 5: Systems Programming (Complete) ==="
 	@echo ""
 	@echo "⚠️  WARNING: Phase 5 bypasses Go's safety guarantees!"
 	@echo ""
@@ -398,6 +400,28 @@ learn-phase5:
 	@echo "  - Zero-copy string conversions"
 	@echo "  - Platform-specific mmap APIs"
 	@echo "  - CGO overhead and best practices"
+
+learn-phase6:
+	@echo "=== Phase 6: Static Analysis ==="
+	@echo ""
+	@echo "Learning Objectives:"
+	@echo "  1. go/ast package for parsing Go code"
+	@echo "  2. go/types for type checking"
+	@echo "  3. Custom linter development"
+	@echo "  4. Code generation with templates"
+	@echo ""
+	@echo "Key Files:"
+	@echo "  - pkg/analysis/ast.go            (AST parsing, traversal)"
+	@echo "  - pkg/analysis/linter.go         (Custom linter rules)"
+	@echo "  - pkg/analysis/generator.go      (Code generation)"
+	@echo "  - docs/PHASE6_LEARNING.md        (Learning guide)"
+	@echo ""
+	@echo "Key Concepts:"
+	@echo "  - Abstract Syntax Trees (AST)"
+	@echo "  - AST traversal with ast.Inspect and ast.Walk"
+	@echo "  - Type checking with go/types"
+	@echo "  - Template-based code generation"
+	@echo "  - Building custom linter rules"
 
 exercise-4-1:
 	@echo "=== Exercise 4.1: Optimized Buffer Pool ==="
@@ -570,6 +594,95 @@ test-systems:
 	@echo "Testing systems package..."
 	@go test -race -v ./pkg/systems/...
 
+# === Phase 6: Static Analysis Exercises ===
+
+exercise-6-1:
+	@echo "=== Exercise 6.1: AST Explorer ==="
+	@echo ""
+	@echo "Objective: Parse and analyze Go source code structure"
+	@echo ""
+	@echo "Requirements:"
+	@echo "  - ParseFile() and ParseSource() for parsing"
+	@echo "  - FindFunctions() to discover function declarations"
+	@echo "  - AnalyzeFile() for comprehensive analysis"
+	@echo "  - Extract structs, interfaces, and imports"
+	@echo "  - FindTODOs() to locate TODO comments"
+	@echo ""
+	@echo "File to edit: pkg/analysis/ast.go"
+	@echo "Test file: pkg/analysis/ast_test.go"
+	@echo ""
+	@echo "Verify with: make verify-6-1"
+
+exercise-6-2:
+	@echo "=== Exercise 6.2: Custom Linter ==="
+	@echo ""
+	@echo "Objective: Build a linter with multiple rules"
+	@echo ""
+	@echo "Requirements:"
+	@echo "  - Rule 1: context.Context should be first parameter"
+	@echo "  - Rule 2: Error return values must be checked"
+	@echo "  - Rule 3: TODO comments should reference issues"
+	@echo "  - Rule 4: Detect empty error handlers"
+	@echo "  - Rule 5: Flag naked returns in long functions"
+	@echo "  - Output diagnostics with position info"
+	@echo ""
+	@echo "File to edit: pkg/analysis/linter.go"
+	@echo "Test file: pkg/analysis/linter_test.go"
+	@echo ""
+	@echo "Verify with: make verify-6-2"
+
+exercise-6-3:
+	@echo "=== Exercise 6.3: Mock Generator ==="
+	@echo ""
+	@echo "Objective: Generate mock implementations from interfaces"
+	@echo ""
+	@echo "Requirements:"
+	@echo "  - ExtractInterfaceSpec() to analyze interfaces"
+	@echo "  - GenerateMock() using text/template"
+	@echo "  - Handle multiple methods and parameters"
+	@echo "  - Generate proper zero values for returns"
+	@echo "  - AST-based generation helpers"
+	@echo "  - Format output with go/format"
+	@echo ""
+	@echo "File to edit: pkg/analysis/generator.go"
+	@echo "Test file: pkg/analysis/generator_test.go"
+	@echo ""
+	@echo "Verify with: make verify-6-3"
+
+verify-6-1:
+	@echo "Verifying Exercise 6.1..."
+	@go test -race -v -run TestParseSource ./pkg/analysis/...
+	@go test -race -v -run TestFindFunctions ./pkg/analysis/...
+	@go test -race -v -run TestAnalyzeFile ./pkg/analysis/...
+	@go test -race -v -run TestFindTODOs ./pkg/analysis/...
+	@echo ""
+	@echo "✓ Exercise 6.1 verified!"
+
+verify-6-2:
+	@echo "Verifying Exercise 6.2..."
+	@go test -race -v -run TestContextFirstRule ./pkg/analysis/...
+	@go test -race -v -run TestEmptyErrorHandlerRule ./pkg/analysis/...
+	@go test -race -v -run TestTODOWithoutIssueRule ./pkg/analysis/...
+	@go test -race -v -run TestNakedReturnRule ./pkg/analysis/...
+	@go test -race -v -run TestLinter ./pkg/analysis/...
+	@echo ""
+	@echo "✓ Exercise 6.2 verified!"
+
+verify-6-3:
+	@echo "Verifying Exercise 6.3..."
+	@go test -race -v -run TestGenerateMock ./pkg/analysis/...
+	@go test -race -v -run TestExtractInterfaceSpec ./pkg/analysis/...
+	@go test -race -v -run TestMockMethod ./pkg/analysis/...
+	@go test -race -v -run TestGenerateFromAST ./pkg/analysis/...
+	@go test -race -v -run TestCreate ./pkg/analysis/...
+	@echo ""
+	@echo "✓ Exercise 6.3 verified!"
+
+# Test all Phase 6 analysis code
+test-analysis:
+	@echo "Testing analysis package..."
+	@go test -race -v ./pkg/analysis/...
+
 # Benchmark Phase 5 packages
 bench-systems:
 	@echo "Running systems benchmarks..."
@@ -672,6 +785,7 @@ help:
 	@echo "  make test-generic   Run generics tests"
 	@echo "  make test-perf      Run performance tests"
 	@echo "  make test-systems   Run systems programming tests"
+	@echo "  make test-analysis  Run static analysis tests"
 	@echo "  make bench          Run benchmarks"
 	@echo "  make coverage       Show coverage in browser"
 	@echo ""
@@ -686,6 +800,7 @@ help:
 	@echo "  make learn-phase3   Review Phase 3 materials"
 	@echo "  make learn-phase4   Review Phase 4 materials"
 	@echo "  make learn-phase5   Review Phase 5 materials"
+	@echo "  make learn-phase6   Review Phase 6 materials"
 	@echo ""
 	@echo "Phase 1 Exercises (Foundations):"
 	@echo "  make exercise-1-1   Retry with exponential backoff"
@@ -724,6 +839,14 @@ help:
 	@echo "  make verify-5-1     Verify Exercise 5.1"
 	@echo "  make verify-5-2     Verify Exercise 5.2"
 	@echo "  make verify-5-3     Verify Exercise 5.3"
+	@echo ""
+	@echo "Phase 6 Exercises (Static Analysis):"
+	@echo "  make exercise-6-1   AST explorer"
+	@echo "  make exercise-6-2   Custom linter"
+	@echo "  make exercise-6-3   Mock generator"
+	@echo "  make verify-6-1     Verify Exercise 6.1"
+	@echo "  make verify-6-2     Verify Exercise 6.2"
+	@echo "  make verify-6-3     Verify Exercise 6.3"
 	@echo ""
 	@echo "Performance:"
 	@echo "  make bench-perf     Run all performance benchmarks"
