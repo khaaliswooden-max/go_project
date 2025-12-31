@@ -426,5 +426,3 @@ func TestPartition(t *testing.T) {
 		}
 	})
 }
-
-

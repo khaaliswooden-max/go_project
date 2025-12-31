@@ -308,4 +308,3 @@ func (p *TrackedPool[T]) ReuseRate() float64 {
 	reuses := p.stats.Gets - p.stats.News
 	return float64(reuses) / float64(p.stats.Gets) * 100
 }
-

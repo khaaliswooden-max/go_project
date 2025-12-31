@@ -31,20 +31,20 @@ var Version = "dev"
 
 // Config holds server configuration.
 type Config struct {
-	Addr           string        // Listen address (default: ":8080")
-	ReadTimeout    time.Duration // Max time to read request (default: 30s)
-	WriteTimeout   time.Duration // Max time to write response (default: 60s)
-	IdleTimeout    time.Duration // Max time for keep-alive (default: 120s)
+	Addr            string        // Listen address (default: ":8080")
+	ReadTimeout     time.Duration // Max time to read request (default: 30s)
+	WriteTimeout    time.Duration // Max time to write response (default: 60s)
+	IdleTimeout     time.Duration // Max time for keep-alive (default: 120s)
 	ShutdownTimeout time.Duration // Max time to wait for graceful shutdown (default: 30s)
 }
 
 // DefaultConfig returns sensible defaults.
 func DefaultConfig() Config {
 	return Config{
-		Addr:           ":8080",
-		ReadTimeout:    30 * time.Second,
-		WriteTimeout:   60 * time.Second,
-		IdleTimeout:    120 * time.Second,
+		Addr:            ":8080",
+		ReadTimeout:     30 * time.Second,
+		WriteTimeout:    60 * time.Second,
+		IdleTimeout:     120 * time.Second,
 		ShutdownTimeout: 30 * time.Second,
 	}
 }
@@ -255,16 +255,16 @@ func (s *Server) handleGenerate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		statusCode := s.errorStatusCode(err)
 		s.writeError(w, err, statusCode)
-		
+
 		// Audit log for failed request
 		if s.auditLogger != nil {
 			s.auditLogger.Log(types.AuditEntry{
-				Timestamp: time.Now().UTC(),
-				Action:    "generate",
-				Model:     req.Model,
+				Timestamp:  time.Now().UTC(),
+				Action:     "generate",
+				Model:      req.Model,
 				DurationMs: time.Since(start).Milliseconds(),
-				Success:   false,
-				ErrorCode: errors.ErrorCode(err),
+				Success:    false,
+				ErrorCode:  errors.ErrorCode(err),
 			})
 		}
 		return
@@ -345,7 +345,7 @@ func (s *Server) handleChat(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		statusCode := s.errorStatusCode(err)
 		s.writeError(w, err, statusCode)
-		
+
 		if s.auditLogger != nil {
 			s.auditLogger.Log(types.AuditEntry{
 				Timestamp:  time.Now().UTC(),

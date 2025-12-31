@@ -22,13 +22,13 @@ func main() {
 	// LEARN: Use flags for configuration that changes per deployment.
 	// Use environment variables for secrets.
 	// Use config files for complex configuration.
-	
+
 	var (
-		addr       = flag.String("addr", envOrDefault("GLR_ADDR", ":8080"), "Server listen address")
-		ollamaURL  = flag.String("ollama-url", envOrDefault("OLLAMA_URL", "http://localhost:11434"), "Ollama API URL")
-		timeout    = flag.Duration("timeout", 30*time.Second, "Request timeout")
-		logLevel   = flag.String("log-level", envOrDefault("LOG_LEVEL", "info"), "Log level (debug, info, warn, error)")
-		auditFile  = flag.String("audit-file", envOrDefault("AUDIT_FILE", ""), "Audit log file (empty = stdout)")
+		addr      = flag.String("addr", envOrDefault("GLR_ADDR", ":8080"), "Server listen address")
+		ollamaURL = flag.String("ollama-url", envOrDefault("OLLAMA_URL", "http://localhost:11434"), "Ollama API URL")
+		timeout   = flag.Duration("timeout", 30*time.Second, "Request timeout")
+		logLevel  = flag.String("log-level", envOrDefault("LOG_LEVEL", "info"), "Log level (debug, info, warn, error)")
+		auditFile = flag.String("audit-file", envOrDefault("AUDIT_FILE", ""), "Audit log file (empty = stdout)")
 	)
 	flag.Parse()
 

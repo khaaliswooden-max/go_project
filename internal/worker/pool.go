@@ -50,8 +50,8 @@ type jobWrapper struct {
 
 // Config holds pool configuration.
 type Config struct {
-	Workers    int // Number of worker goroutines (default: runtime.NumCPU())
-	JobBuffer  int // Size of job queue buffer (default: workers * 2)
+	Workers      int // Number of worker goroutines (default: runtime.NumCPU())
+	JobBuffer    int // Size of job queue buffer (default: workers * 2)
 	ResultBuffer int // Size of result buffer (default: workers * 2)
 }
 
@@ -117,7 +117,7 @@ func (p *Pool) worker(id int) {
 	defer p.wg.Done()
 
 	// TODO Exercise 2.1: Implement the worker loop
-	// 
+	//
 	// Requirements:
 	// 1. Loop over p.jobs channel (use range)
 	// 2. Check p.ctx.Done() before processing each job
@@ -232,4 +232,3 @@ func (p *Pool) ShutdownNow() {
 func (p *Pool) WorkerCount() int {
 	return p.workers
 }
-

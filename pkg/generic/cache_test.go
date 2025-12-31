@@ -452,5 +452,3 @@ func BenchmarkLRUCacheSetGetMixed(b *testing.B) {
 		}
 	}
 }
-
-

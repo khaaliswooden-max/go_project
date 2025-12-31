@@ -295,5 +295,3 @@ func Partition[T any](results []Result[T]) ([]T, []error) {
 
 // ErrNone is returned when unwrapping an empty or uninitialized Result.
 var ErrNone = errors.New("result: no value present")
-
-

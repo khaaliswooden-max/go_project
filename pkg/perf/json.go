@@ -210,4 +210,3 @@ func (e *TrackedJSONEncoder) Stats() JSONStats {
 	defer e.statsMu.Unlock()
 	return e.stats
 }
-

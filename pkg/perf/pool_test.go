@@ -285,4 +285,3 @@ func ExampleByteBufferPool() {
 		// Process buf.Bytes()...
 	})
 }
-

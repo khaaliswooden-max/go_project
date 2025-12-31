@@ -23,8 +23,8 @@ import (
 
 // StructField describes a single field in a struct layout.
 type StructField struct {
-	Name      string // Field name
-	Type      string // Field type as string
+	Name      string  // Field name
+	Type      string  // Field type as string
 	Size      uintptr // Size in bytes
 	Alignment uintptr // Alignment requirement
 	Offset    uintptr // Offset from struct start
@@ -38,11 +38,11 @@ type StructField struct {
 // - Interoperability with C (matching C struct layouts)
 // - Binary file formats (predictable byte positions)
 type StructLayout struct {
-	Name       string        // Struct type name
-	Size       uintptr       // Total size including padding
-	Alignment  uintptr       // Alignment requirement
-	Fields     []StructField // Individual field info
-	TotalPadding uintptr     // Total wasted padding bytes
+	Name         string        // Struct type name
+	Size         uintptr       // Total size including padding
+	Alignment    uintptr       // Alignment requirement
+	Fields       []StructField // Individual field info
+	TotalPadding uintptr       // Total wasted padding bytes
 }
 
 // AnalyzeStruct returns the memory layout of any struct type.
@@ -62,34 +62,34 @@ type StructLayout struct {
 //	// Shows padding between a and b, and after c
 func AnalyzeStruct(v any) StructLayout {
 	t := reflect.TypeOf(v)
-	
+
 	// Handle pointer to struct
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
-	
+
 	if t.Kind() != reflect.Struct {
 		return StructLayout{
-			Name: t.String(),
-			Size: t.Size(),
+			Name:      t.String(),
+			Size:      t.Size(),
 			Alignment: uintptr(t.Align()),
 		}
 	}
-	
+
 	layout := StructLayout{
 		Name:      t.String(),
 		Size:      t.Size(),
 		Alignment: uintptr(t.Align()),
 		Fields:    make([]StructField, t.NumField()),
 	}
-	
+
 	var prevEnd uintptr
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
-		
+
 		padding := field.Offset - prevEnd
 		layout.TotalPadding += padding
-		
+
 		layout.Fields[i] = StructField{
 			Name:      field.Name,
 			Type:      field.Type.String(),
@@ -98,15 +98,15 @@ func AnalyzeStruct(v any) StructLayout {
 			Offset:    field.Offset,
 			Padding:   padding,
 		}
-		
+
 		prevEnd = field.Offset + field.Type.Size()
 	}
-	
+
 	// Trailing padding
 	if prevEnd < t.Size() {
 		layout.TotalPadding += t.Size() - prevEnd
 	}
-	
+
 	return layout
 }
 
@@ -116,15 +116,15 @@ func AnalyzeStruct(v any) StructLayout {
 // Reordering fields can significantly reduce struct size.
 func (l StructLayout) String() string {
 	var b strings.Builder
-	
+
 	fmt.Fprintf(&b, "=== Struct: %s ===\n", l.Name)
 	fmt.Fprintf(&b, "Size: %d bytes, Alignment: %d bytes, Padding: %d bytes (%.1f%%)\n\n",
 		l.Size, l.Alignment, l.TotalPadding,
 		float64(l.TotalPadding)/float64(l.Size)*100)
-	
+
 	fmt.Fprintf(&b, "Offset | Size | Align | Pad | Field\n")
 	fmt.Fprintf(&b, "-------|------|-------|-----|------\n")
-	
+
 	for _, f := range l.Fields {
 		padStr := ""
 		if f.Padding > 0 {
@@ -133,7 +133,7 @@ func (l StructLayout) String() string {
 		fmt.Fprintf(&b, "%6d | %4d | %5d | %3s | %s %s\n",
 			f.Offset, f.Size, f.Alignment, padStr, f.Name, f.Type)
 	}
-	
+
 	// Show trailing padding if any
 	if len(l.Fields) > 0 {
 		lastField := l.Fields[len(l.Fields)-1]
@@ -143,7 +143,7 @@ func (l StructLayout) String() string {
 				lastField.Offset+lastField.Size, "", "", trailing)
 		}
 	}
-	
+
 	return b.String()
 }
 
@@ -155,19 +155,19 @@ func (l StructLayout) OptimizeSuggestion() string {
 	if l.TotalPadding == 0 {
 		return fmt.Sprintf("Struct %s is already optimally ordered (no padding).", l.Name)
 	}
-	
+
 	// Sort fields by alignment (descending), then by size (descending)
 	type fieldSort struct {
 		name  string
 		align uintptr
 		size  uintptr
 	}
-	
+
 	fields := make([]fieldSort, len(l.Fields))
 	for i, f := range l.Fields {
 		fields[i] = fieldSort{f.Name, f.Alignment, f.Size}
 	}
-	
+
 	// Simple bubble sort for clarity
 	for i := 0; i < len(fields); i++ {
 		for j := i + 1; j < len(fields); j++ {
@@ -177,13 +177,13 @@ func (l StructLayout) OptimizeSuggestion() string {
 			}
 		}
 	}
-	
+
 	var b strings.Builder
 	fmt.Fprintf(&b, "Suggested field order for %s:\n", l.Name)
 	for _, f := range fields {
 		fmt.Fprintf(&b, "  %s (align: %d, size: %d)\n", f.name, f.align, f.size)
 	}
-	
+
 	return b.String()
 }
 
@@ -203,7 +203,7 @@ func UnsafeStringToBytes(s string) []byte {
 	if s == "" {
 		return nil
 	}
-	
+
 	// LEARN: Go 1.20+ provides unsafe.StringData and unsafe.Slice
 	// for this exact purpose, making it "blessed" but still dangerous.
 	return unsafe.Slice(unsafe.StringData(s), len(s))
@@ -225,7 +225,7 @@ func UnsafeBytesToString(b []byte) string {
 	if len(b) == 0 {
 		return ""
 	}
-	
+
 	// LEARN: Go 1.20+ provides unsafe.String for this purpose
 	return unsafe.String(unsafe.SliceData(b), len(b))
 }
@@ -295,9 +295,9 @@ func AlignOf[T any]() uintptr {
 // LEARN: Small fields between large fields cause padding.
 // Size: 24 bytes (8 bytes wasted on padding)
 type InefficientLayout struct {
-	A bool   // 1 byte + 7 padding
-	B int64  // 8 bytes
-	C bool   // 1 byte + 7 padding
+	A bool  // 1 byte + 7 padding
+	B int64 // 8 bytes
+	C bool  // 1 byte + 7 padding
 }
 
 // EfficientLayout demonstrates optimal struct field ordering.
@@ -316,22 +316,21 @@ type EfficientLayout struct {
 // This is the pattern used in high-performance Go code.
 type ComplexLayout struct {
 	// 8-byte aligned fields first
-	Ptr     *int    // 8 bytes
-	Slice   []byte  // 24 bytes (ptr + len + cap)
-	String  string  // 16 bytes (ptr + len)
-	Int64   int64   // 8 bytes
-	
+	Ptr    *int   // 8 bytes
+	Slice  []byte // 24 bytes (ptr + len + cap)
+	String string // 16 bytes (ptr + len)
+	Int64  int64  // 8 bytes
+
 	// 4-byte aligned fields
 	Int32   int32   // 4 bytes
 	Float32 float32 // 4 bytes
-	
+
 	// 2-byte aligned fields
-	Int16   int16   // 2 bytes
-	
+	Int16 int16 // 2 bytes
+
 	// 1-byte aligned fields (grouped at end)
-	Bool1   bool    // 1 byte
-	Bool2   bool    // 1 byte
-	Byte    byte    // 1 byte
+	Bool1 bool // 1 byte
+	Bool2 bool // 1 byte
+	Byte  byte // 1 byte
 	// + padding to reach 8-byte alignment
 }
-

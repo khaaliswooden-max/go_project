@@ -25,12 +25,12 @@ var (
 
 var (
 	// Client errors (4xx equivalent)
-	ErrInvalidRequest   = stderrors.New("invalid request")
-	ErrModelNotFound    = stderrors.New("model not found")
-	ErrModelNotLoaded   = stderrors.New("model not loaded")
-	ErrRequestCanceled  = stderrors.New("request canceled")
-	ErrRequestTimeout   = stderrors.New("request timeout")
-	ErrInvalidJSON      = stderrors.New("invalid JSON")
+	ErrInvalidRequest  = stderrors.New("invalid request")
+	ErrModelNotFound   = stderrors.New("model not found")
+	ErrModelNotLoaded  = stderrors.New("model not loaded")
+	ErrRequestCanceled = stderrors.New("request canceled")
+	ErrRequestTimeout  = stderrors.New("request timeout")
+	ErrInvalidJSON     = stderrors.New("invalid JSON")
 
 	// Server errors (5xx equivalent)
 	ErrOllamaUnavailable = stderrors.New("ollama service unavailable")
@@ -39,9 +39,9 @@ var (
 	ErrStreamingError    = stderrors.New("streaming error")
 
 	// Tool errors (Phase 2+)
-	ErrToolNotFound      = stderrors.New("tool not found")
-	ErrToolExecFailed    = stderrors.New("tool execution failed")
-	ErrToolTimeout       = stderrors.New("tool execution timeout")
+	ErrToolNotFound   = stderrors.New("tool not found")
+	ErrToolExecFailed = stderrors.New("tool execution failed")
+	ErrToolTimeout    = stderrors.New("tool execution timeout")
 )
 
 // === Wrapped Errors ===
@@ -75,12 +75,12 @@ func WrapValidationError(field string, err error) error {
 // or simple prefixed strings.
 
 const (
-	CodeInvalidRequest   = "GLR_INVALID_REQUEST"
-	CodeModelNotFound    = "GLR_MODEL_NOT_FOUND"
+	CodeInvalidRequest    = "GLR_INVALID_REQUEST"
+	CodeModelNotFound     = "GLR_MODEL_NOT_FOUND"
 	CodeOllamaUnavailable = "GLR_OLLAMA_UNAVAILABLE"
-	CodeTimeout          = "GLR_TIMEOUT"
-	CodeInternalError    = "GLR_INTERNAL_ERROR"
-	CodeToolError        = "GLR_TOOL_ERROR"
+	CodeTimeout           = "GLR_TIMEOUT"
+	CodeInternalError     = "GLR_INTERNAL_ERROR"
+	CodeToolError         = "GLR_TOOL_ERROR"
 )
 
 // ErrorCode returns the appropriate error code for a given error.

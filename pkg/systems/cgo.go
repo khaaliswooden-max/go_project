@@ -89,10 +89,10 @@ func CAdd(a, b int) int {
 func CStrlen(s string) int {
 	// Convert Go string to C string
 	cs := C.CString(s)
-	
+
 	// CRITICAL: Free the C string when done
 	defer C.free(unsafe.Pointer(cs))
-	
+
 	// Call C function
 	return int(C.c_strlen(cs))
 }
@@ -139,13 +139,13 @@ func CSumArray(arr []int32) int64 {
 	if len(arr) == 0 {
 		return 0
 	}
-	
+
 	// Get pointer to first element
 	// LEARN: This is safe because:
 	// 1. We're passing to C immediately
 	// 2. The slice exists for the duration of the call
 	ptr := (*C.int)(unsafe.Pointer(&arr[0]))
-	
+
 	result := C.c_sum_array(ptr, C.int(len(arr)))
 	return int64(result)
 }
@@ -206,7 +206,7 @@ func BatchProcess(data []int32, addend int32) int64 {
 	if len(data) == 0 {
 		return 0
 	}
-	
+
 	// Single CGO call processes entire array
 	return CSumArray(data)
 }
@@ -235,4 +235,3 @@ func GoSumArray(arr []int32) int64 {
 	}
 	return sum
 }
-

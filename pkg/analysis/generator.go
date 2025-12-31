@@ -628,4 +628,3 @@ func GenerateSetter(structName, fieldName, fieldType string) *ast.FuncDecl {
 		Body: body,
 	}
 }
-

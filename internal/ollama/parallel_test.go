@@ -25,12 +25,12 @@ import (
 
 // mockGenerator implements Generator for testing.
 type mockGenerator struct {
-	generateFunc func(ctx context.Context, req types.GenerateRequest) (*types.GenerateResponse, error)
-	delay        time.Duration
-	callCount    int32
-	concurrent   int32
+	generateFunc  func(ctx context.Context, req types.GenerateRequest) (*types.GenerateResponse, error)
+	delay         time.Duration
+	callCount     int32
+	concurrent    int32
 	maxConcurrent int32
-	mu           sync.Mutex
+	mu            sync.Mutex
 }
 
 func (m *mockGenerator) Generate(ctx context.Context, req types.GenerateRequest) (*types.GenerateResponse, error) {
@@ -616,4 +616,3 @@ func BenchmarkParallelGenerator_Large(b *testing.B) {
 		parallel.GenerateParallel(context.Background(), req)
 	}
 }
-

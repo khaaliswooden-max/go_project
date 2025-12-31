@@ -283,4 +283,3 @@ func GenerateAllStrict(ctx context.Context, gen Generator, model string, prompts
 
 	return responses, nil
 }
-

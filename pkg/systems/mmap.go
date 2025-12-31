@@ -36,18 +36,18 @@ type MappedFile interface {
 	// Data returns the mapped memory region as a byte slice.
 	// The slice is valid only until Close() is called.
 	Data() []byte
-	
+
 	// Len returns the length of the mapping.
 	Len() int
-	
+
 	// ReadAt reads len(p) bytes from offset into p.
 	// Implements io.ReaderAt for compatibility.
 	ReadAt(p []byte, off int64) (n int, err error)
-	
+
 	// Close unmaps the file and releases resources.
 	// After Close, Data() must not be accessed.
 	Close() error
-	
+
 	// Sync flushes changes to disk (for writable mappings).
 	Sync() error
 }
@@ -57,7 +57,7 @@ type MmapOptions struct {
 	// ReadOnly maps the file for reading only.
 	// Attempting to write will cause an error or segfault.
 	ReadOnly bool
-	
+
 	// MaxSize limits the mapping size (0 = no limit).
 	// Useful for preventing excessive virtual address consumption.
 	MaxSize int64
@@ -76,13 +76,13 @@ func DefaultMmapOptions() MmapOptions {
 // mmapFile is the core implementation of MappedFile.
 // Platform-specific details are handled by mmapImpl.
 type mmapFile struct {
-	data     []byte    // Mapped memory region
-	file     *os.File  // Underlying file handle
-	size     int64     // Mapping size
-	readOnly bool      // Read-only flag
-	closed   bool      // Close state
+	data     []byte       // Mapped memory region
+	file     *os.File     // Underlying file handle
+	size     int64        // Mapping size
+	readOnly bool         // Read-only flag
+	closed   bool         // Close state
 	mu       sync.RWMutex // Protects closed state
-	
+
 	// Platform-specific resources (set by mmapPlatformOpen)
 	platformData any
 }
@@ -101,7 +101,7 @@ type mmapFile struct {
 //	    return err
 //	}
 //	defer mf.Close()
-//	
+//
 //	data := mf.Data()
 //	// Access data directly - OS handles paging
 //	fmt.Println(data[0:100])
@@ -111,43 +111,43 @@ func OpenMmap(path string, opts MmapOptions) (MappedFile, error) {
 	if !opts.ReadOnly {
 		flags = os.O_RDWR
 	}
-	
+
 	f, err := os.OpenFile(path, flags, 0)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Get file size
 	info, err := f.Stat()
 	if err != nil {
 		f.Close()
 		return nil, err
 	}
-	
+
 	size := info.Size()
 	if size == 0 {
 		f.Close()
 		return nil, ErrMmapEmpty
 	}
-	
+
 	if opts.MaxSize > 0 && size > opts.MaxSize {
 		f.Close()
 		return nil, ErrMmapTooLarge
 	}
-	
+
 	// Create mapping
 	mf := &mmapFile{
 		file:     f,
 		size:     size,
 		readOnly: opts.ReadOnly,
 	}
-	
+
 	// Platform-specific mapping
 	if err := mmapPlatformOpen(mf); err != nil {
 		f.Close()
 		return nil, err
 	}
-	
+
 	return mf, nil
 }
 
@@ -155,7 +155,7 @@ func OpenMmap(path string, opts MmapOptions) (MappedFile, error) {
 func (m *mmapFile) Data() []byte {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	if m.closed {
 		return nil
 	}
@@ -171,15 +171,15 @@ func (m *mmapFile) Len() int {
 func (m *mmapFile) ReadAt(p []byte, off int64) (n int, err error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	if m.closed {
 		return 0, ErrMmapClosed
 	}
-	
+
 	if off < 0 || off >= m.size {
 		return 0, ErrMmapOutOfRange
 	}
-	
+
 	n = copy(p, m.data[off:])
 	if n < len(p) {
 		return n, io.EOF
@@ -191,20 +191,20 @@ func (m *mmapFile) ReadAt(p []byte, off int64) (n int, err error) {
 func (m *mmapFile) Close() error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if m.closed {
 		return nil
 	}
 	m.closed = true
-	
+
 	// Platform-specific cleanup
 	err := mmapPlatformClose(m)
-	
+
 	// Close file
 	if ferr := m.file.Close(); err == nil {
 		err = ferr
 	}
-	
+
 	return err
 }
 
@@ -212,11 +212,11 @@ func (m *mmapFile) Close() error {
 func (m *mmapFile) Sync() error {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	if m.closed {
 		return ErrMmapClosed
 	}
-	
+
 	return mmapPlatformSync(m)
 }
 
@@ -256,11 +256,11 @@ func (r *MmapReader) Seek(offset int64, whence int) (int64, error) {
 	default:
 		return 0, errors.New("mmap: invalid whence")
 	}
-	
+
 	if abs < 0 {
 		return 0, errors.New("mmap: negative position")
 	}
-	
+
 	r.offset = abs
 	return abs, nil
 }
@@ -281,12 +281,12 @@ func ReadFileMmap(path string) ([]byte, error) {
 		return os.ReadFile(path)
 	}
 	defer mf.Close()
-	
+
 	// Copy data since mmap data is invalid after Close
 	data := mf.Data()
 	result := make([]byte, len(data))
 	copy(result, data)
-	
+
 	return result, nil
 }
 
@@ -299,7 +299,7 @@ func SearchMmap(mf MappedFile, pattern []byte) int64 {
 	if len(pattern) == 0 || len(data) < len(pattern) {
 		return -1
 	}
-	
+
 	// Simple search - could use Boyer-Moore for large patterns
 	for i := 0; i <= len(data)-len(pattern); i++ {
 		match := true
@@ -313,7 +313,6 @@ func SearchMmap(mf MappedFile, pattern []byte) int64 {
 			return int64(i)
 		}
 	}
-	
+
 	return -1
 }
-

@@ -337,4 +337,3 @@ func TestSlicePoolAllocations(t *testing.T) {
 		t.Errorf("Too many allocations: %.1f, want <= 1", allocs)
 	}
 }
-

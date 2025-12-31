@@ -201,4 +201,3 @@ func (s *Semaphore) Close() {
 		close(s.released)
 	}
 }
-

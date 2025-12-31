@@ -30,8 +30,8 @@ import (
 // LEARN: We use a mutex for thread safety. In Phase 4, we'll
 // optimize with lock-free ring buffers and async batching.
 type Logger struct {
-	mu     sync.Mutex
-	writer io.Writer
+	mu      sync.Mutex
+	writer  io.Writer
 	encoder *json.Encoder
 }
 

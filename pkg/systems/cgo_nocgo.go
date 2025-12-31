@@ -98,4 +98,3 @@ func GoSumArray(arr []int32) int64 {
 	}
 	return sum
 }
-

@@ -316,5 +316,3 @@ func (c *CacheWithCallbacks[K, V]) Set(key K, value V) {
 	c.addToFront(e)
 	c.items[key] = e
 }
-
-

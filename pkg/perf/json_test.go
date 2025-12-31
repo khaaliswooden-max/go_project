@@ -16,13 +16,13 @@ import (
 
 // Test data structure
 type TestPayload struct {
-	ID        int      `json:"id"`
-	Name      string   `json:"name"`
-	Email     string   `json:"email"`
-	Active    bool     `json:"active"`
-	Score     float64  `json:"score"`
-	Tags      []string `json:"tags"`
-	Metadata  map[string]string `json:"metadata"`
+	ID       int               `json:"id"`
+	Name     string            `json:"name"`
+	Email    string            `json:"email"`
+	Active   bool              `json:"active"`
+	Score    float64           `json:"score"`
+	Tags     []string          `json:"tags"`
+	Metadata map[string]string `json:"metadata"`
 }
 
 func newTestPayload() TestPayload {
@@ -187,7 +187,7 @@ func BenchmarkJSONMarshal(b *testing.B) {
 // BenchmarkJSONMarshalToWriter tests encoding directly to writer.
 func BenchmarkJSONMarshalToWriter(b *testing.B) {
 	payload := newTestPayload()
-	
+
 	b.Run("stdlib_encoder", func(b *testing.B) {
 		var buf bytes.Buffer
 		encoder := json.NewEncoder(&buf)
@@ -337,4 +337,3 @@ func TestJSONAllocationCount(t *testing.T) {
 		t.Errorf("Pooled allocations (%.1f) significantly higher than stdlib (%.1f)", pooledAllocs, stdlibAllocs)
 	}
 }
-

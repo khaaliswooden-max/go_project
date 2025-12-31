@@ -54,7 +54,7 @@ type ImportInfo struct {
 
 // InterfaceInfo holds metadata about an interface type declaration.
 type InterfaceInfo struct {
-	Name     string       // Interface name
+	Name     string // Interface name
 	Position token.Position
 	Methods  []MethodInfo // Interface methods
 	Comments string
@@ -502,4 +502,3 @@ func fieldListToString(fl *ast.FieldList) string {
 
 	return "(" + strings.Join(parts, ", ") + ")"
 }
-

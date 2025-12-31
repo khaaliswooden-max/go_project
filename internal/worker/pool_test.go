@@ -344,4 +344,3 @@ func BenchmarkPool_RoundTrip(b *testing.B) {
 		<-pool.Results()
 	}
 }
-

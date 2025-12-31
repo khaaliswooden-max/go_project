@@ -462,4 +462,3 @@ func BenchmarkSemaphore_Contended(b *testing.B) {
 	}
 	wg.Wait()
 }
-

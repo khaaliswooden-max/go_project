@@ -285,4 +285,3 @@ func ForEachRune(s string, fn func(i int, r rune)) {
 		fn(i, r)
 	}
 }
-

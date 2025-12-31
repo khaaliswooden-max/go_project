@@ -307,5 +307,3 @@ func MapParallel[In, Out any](
 	}
 	return outputs
 }
-
-

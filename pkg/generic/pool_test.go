@@ -349,5 +349,3 @@ func BenchmarkPoolSubmitAndProcess(b *testing.B) {
 		<-pool.Results()
 	}
 }
-
-

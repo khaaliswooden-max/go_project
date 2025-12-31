@@ -26,7 +26,7 @@ func mmapPlatformOpen(m *mmapFile) error {
 	if !m.readOnly {
 		prot |= unix.PROT_WRITE
 	}
-	
+
 	// Map the file
 	//
 	// LEARN: mmap flags:
@@ -34,22 +34,22 @@ func mmapPlatformOpen(m *mmapFile) error {
 	// - MAP_PRIVATE: Changes are copy-on-write, not written to file
 	// We use MAP_SHARED for writable mappings to enable Sync().
 	flags := unix.MAP_SHARED
-	
+
 	data, err := unix.Mmap(
 		int(m.file.Fd()), // File descriptor
-		0,                 // Offset (map from beginning)
-		int(m.size),       // Length
-		prot,              // Protection flags
-		flags,             // Mapping flags
+		0,                // Offset (map from beginning)
+		int(m.size),      // Length
+		prot,             // Protection flags
+		flags,            // Mapping flags
 	)
 	if err != nil {
 		return err
 	}
-	
+
 	m.data = data
 	// Unix mmap doesn't need additional handles; data slice IS the resource
 	m.platformData = nil
-	
+
 	return nil
 }
 
@@ -58,14 +58,14 @@ func mmapPlatformClose(m *mmapFile) error {
 	if m.data == nil {
 		return nil
 	}
-	
+
 	// munmap releases the mapping
 	//
 	// LEARN: After munmap, accessing m.data is a segfault.
 	// Go's GC doesn't know about mmap, so we must manually clean up.
 	err := unix.Munmap(m.data)
 	m.data = nil
-	
+
 	return err
 }
 
@@ -74,7 +74,7 @@ func mmapPlatformSync(m *mmapFile) error {
 	if m.readOnly || m.data == nil {
 		return nil
 	}
-	
+
 	// msync forces write-back of modified pages
 	//
 	// LEARN: msync flags:
@@ -83,4 +83,3 @@ func mmapPlatformSync(m *mmapFile) error {
 	// - MS_INVALIDATE: Invalidate other mappings (rarely used)
 	return unix.Msync(m.data, unix.MS_SYNC)
 }
-

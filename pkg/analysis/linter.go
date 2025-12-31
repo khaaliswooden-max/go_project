@@ -615,4 +615,3 @@ func hasNamedResults(results *ast.FieldList) bool {
 
 	return false
 }
-

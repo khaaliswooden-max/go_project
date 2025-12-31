@@ -74,10 +74,10 @@ func TestRetry_SucceedsAfterRetries(t *testing.T) {
 	}
 
 	tests := []struct {
-		name          string
-		failCount     int  // Number of times to fail before succeeding
-		wantAttempts  int  // Expected total attempts
-		wantErr       bool // Whether we expect final error
+		name         string
+		failCount    int  // Number of times to fail before succeeding
+		wantAttempts int  // Expected total attempts
+		wantErr      bool // Whether we expect final error
 	}{
 		{
 			name:         "succeeds after 1 failure",
@@ -492,4 +492,3 @@ func BenchmarkAddJitter(b *testing.B) {
 		_ = addJitter(d, factor)
 	}
 }
-

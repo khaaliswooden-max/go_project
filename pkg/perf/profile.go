@@ -243,4 +243,3 @@ func GCHandler() http.HandlerFunc {
 		)
 	}
 }
-
