@@ -1,0 +1,26 @@
+{
+  "editor.formatOnSave": true,
+  "go.formatTool": "goimports",
+  "go.lintTool": "staticcheck",
+  "go.lintOnSave": "workspace",
+  "go.vetOnSave": "workspace",
+  "go.testOnSave": false,
+  "go.coverOnSave": false,
+  "go.testFlags": ["-race", "-v"],
+  "go.buildFlags": [],
+  "go.useLanguageServer": true,
+  "gopls": {
+    "formatting.gofumpt": false,
+    "ui.semanticTokens": true,
+    "ui.completion.usePlaceholders": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/bin": true,
+    "**/coverage.out": true
+  },
+  "search.exclude": {
+    "**/bin": true
+  }
+}
+
