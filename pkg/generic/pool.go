@@ -53,6 +53,8 @@ type Pool[In, Out any] struct {
 	wg      sync.WaitGroup
 	ctx     context.Context
 	cancel  context.CancelFunc
+	mu      sync.RWMutex // Protects jobs channel from concurrent close/send
+	closed  bool         // Indicates shutdown has started
 }
 
 // PoolConfig holds pool configuration.
@@ -172,12 +174,15 @@ func (p *Pool[In, Out]) Submit(input In, fn func(context.Context, In) (Out, erro
 }
 
 // SubmitWithID adds a job with a specific ID for result correlation.
-func (p *Pool[In, Out]) SubmitWithID(input In, fn func(context.Context, In) (Out, error), jobID int) (id int) {
-	defer func() {
-		if r := recover(); r != nil {
-			id = -1
-		}
-	}()
+func (p *Pool[In, Out]) SubmitWithID(input In, fn func(context.Context, In) (Out, error), jobID int) int {
+	// LEARN: RWMutex prevents race between Submit (RLock) and Shutdown (Lock).
+	// Multiple Submits can run concurrently, but Shutdown waits for all to complete.
+	p.mu.RLock()
+	if p.closed {
+		p.mu.RUnlock()
+		return -1
+	}
+	defer p.mu.RUnlock()
 
 	select {
 	case <-p.ctx.Done():
@@ -192,11 +197,12 @@ func (p *Pool[In, Out]) SubmitWithID(input In, fn func(context.Context, In) (Out
 // LEARN: This variant is useful when you've already created the Job struct,
 // perhaps from a job factory or when resubmitting failed jobs.
 func (p *Pool[In, Out]) SubmitJob(job Job[In, Out]) int {
-	defer func() {
-		if recover() != nil {
-			// Swallow panic from closed channel
-		}
-	}()
+	p.mu.RLock()
+	if p.closed {
+		p.mu.RUnlock()
+		return -1
+	}
+	defer p.mu.RUnlock()
 
 	select {
 	case <-p.ctx.Done():
@@ -220,7 +226,13 @@ func (p *Pool[In, Out]) Results() <-chan PoolResult[Out] {
 
 // Shutdown gracefully stops the pool.
 func (p *Pool[In, Out]) Shutdown() {
+	// LEARN: Acquire write lock to ensure no concurrent Submits during close.
+	// This prevents the race condition between send and close on jobs channel.
+	p.mu.Lock()
+	p.closed = true
 	close(p.jobs)
+	p.mu.Unlock()
+
 	p.wg.Wait()
 	close(p.results)
 	p.cancel()
@@ -228,8 +240,12 @@ func (p *Pool[In, Out]) Shutdown() {
 
 // ShutdownNow immediately cancels all in-progress work.
 func (p *Pool[In, Out]) ShutdownNow() {
+	p.mu.Lock()
+	p.closed = true
 	p.cancel()
 	close(p.jobs)
+	p.mu.Unlock()
+
 	p.wg.Wait()
 	close(p.results)
 }

@@ -117,6 +117,12 @@ func ParseSource(src string) (*ast.File, *token.FileSet, error) {
 // LEARN: parser.ParseDir returns a map of package name to *ast.Package.
 // Most directories contain a single package, but test files may
 // create a separate "_test" package.
+//
+// Note: ast.Package is deprecated since Go 1.22, but parser.ParseDir
+// still returns this type. For production code, consider using go/types
+// for type-checked analysis. This function is kept for learning purposes.
+//
+//lint:ignore SA1019 ast.Package is returned by parser.ParseDir from stdlib
 func ParseDir(dir string) (map[string]*ast.Package, *token.FileSet, error) {
 	fset := token.NewFileSet()
 

@@ -224,14 +224,6 @@ func ConcatBytes(parts ...[]byte) []byte {
 // LEARN: These functions demonstrate escape analysis patterns.
 // Use `go build -gcflags='-m'` to see escape decisions.
 
-// noEscape is a helper to mark a value as not escaping.
-// This is a hint to the compiler; actual escape depends on usage.
-//
-//go:noinline
-func noEscape[T any](v T) T {
-	return v
-}
-
 // Point demonstrates stack vs heap allocation.
 type Point struct {
 	X, Y float64

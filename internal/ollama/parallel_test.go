@@ -12,7 +12,6 @@ package ollama
 import (
 	"context"
 	"errors"
-	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -30,7 +29,6 @@ type mockGenerator struct {
 	callCount     int32
 	concurrent    int32
 	maxConcurrent int32
-	mu            sync.Mutex
 }
 
 func (m *mockGenerator) Generate(ctx context.Context, req types.GenerateRequest) (*types.GenerateResponse, error) {

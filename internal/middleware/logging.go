@@ -42,11 +42,12 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// correlationIDHeader is the standard header for request correlation.
-const correlationIDHeader = "X-Correlation-ID"
+// CorrelationIDHeader is the standard header for request correlation.
+// Exported for use by other packages that need correlation ID handling.
+const CorrelationIDHeader = "X-Correlation-ID"
 
-// generateCorrelationID creates a unique request identifier.
+// GenerateCorrelationID creates a unique request identifier.
 // TODO: Implement using crypto/rand or uuid
-func generateCorrelationID() string {
+func GenerateCorrelationID() string {
 	return "TODO"
 }
