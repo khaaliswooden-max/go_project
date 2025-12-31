@@ -528,4 +528,3 @@ func (s *TimeoutStream[T]) Context() context.Context {
 var (
 	ErrStreamClosed = errors.New("stream closed")
 )
-

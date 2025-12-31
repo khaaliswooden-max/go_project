@@ -836,4 +836,3 @@ func (n *RaftNode) ElectionCount() uint64 {
 var (
 	ErrNotLeader = fmt.Errorf("not the leader")
 )
-

@@ -553,4 +553,3 @@ func TestLeaderElectionStop(t *testing.T) {
 		t.Error("Stop did not cause Run to return")
 	}
 }
-

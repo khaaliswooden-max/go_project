@@ -190,11 +190,11 @@ func TestRaftRequestVote(t *testing.T) {
 	node := NewRaftNode(config, transport, nil)
 
 	tests := []struct {
-		name        string
-		setupTerm   uint64
-		args        RequestVoteArgs
-		expectVote  bool
-		expectTerm  uint64
+		name       string
+		setupTerm  uint64
+		args       RequestVoteArgs
+		expectVote bool
+		expectTerm uint64
 	}{
 		{
 			name:      "grant vote - newer term",
@@ -638,4 +638,3 @@ func TestRaftConcurrentPropose(t *testing.T) {
 		t.Errorf("expected %d successful proposals, got %d", numProposals, successCount)
 	}
 }
-

@@ -90,9 +90,9 @@ type LeaderElection struct {
 // NewLeaderElection creates a new leader election instance.
 func NewLeaderElection(config LeaderElectionConfig, store LeaseStore) *LeaderElection {
 	le := &LeaderElection{
-		config:   config,
-		store:    store,
-		stopCh:   make(chan struct{}),
+		config: config,
+		store:  store,
+		stopCh: make(chan struct{}),
 	}
 	le.leaderID.Store("")
 	return le
@@ -424,19 +424,19 @@ func (t *TransferLeadership) Transfer(ctx context.Context, target string) error 
 
 // Errors for leader election
 var (
-	ErrNotLeaseHolder   = errors.New("not the lease holder")
-	ErrLeaseExpired     = errors.New("lease expired")
-	ErrStaleFenceToken  = errors.New("stale fence token")
-	ErrTransferTimeout  = errors.New("leadership transfer timeout")
+	ErrNotLeaseHolder  = errors.New("not the lease holder")
+	ErrLeaseExpired    = errors.New("lease expired")
+	ErrStaleFenceToken = errors.New("stale fence token")
+	ErrTransferTimeout = errors.New("leadership transfer timeout")
 )
 
 // LEARN: Simple observer implementation for common use cases
 
 // LeaderObserverFunc is a function-based observer.
 type LeaderObserverFunc struct {
-	BecomeLeaderFn    func()
-	LoseLeadershipFn  func()
-	LeaderChangedFn   func(newLeader string)
+	BecomeLeaderFn   func()
+	LoseLeadershipFn func()
+	LeaderChangedFn  func(newLeader string)
 }
 
 // OnBecomeLeader implements LeaderObserver.
@@ -521,4 +521,3 @@ func (la *LeaderAware) OnLeaderChanged(newLeader string) {
 func (la *LeaderAware) IsRunning() bool {
 	return atomic.LoadInt32(&la.isRunning) == 1
 }
-

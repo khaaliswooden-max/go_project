@@ -527,4 +527,3 @@ func TestCloseRecvSafety(t *testing.T) {
 	stream.CloseRecv()
 	stream.CloseRecv() // Second call should be safe
 }
-
