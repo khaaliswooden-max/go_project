@@ -77,7 +77,7 @@ test-integration: check-ollama
 
 # Show current phase objectives
 learn:
-	@echo "=== Current Phase: 6 - Static Analysis ==="
+	@echo "=== Current Phase: 7 - Distributed Systems ==="
 	@echo ""
 	@echo "Phase 1 Status: ✓ Complete"
 	@echo "  - Exercise 1.1: Retry with exponential backoff ✓"
@@ -103,26 +103,31 @@ learn:
 	@echo "  - Exercise 5.2: Memory-Mapped File Reader ✓"
 	@echo "  - Exercise 5.3: CGO Integration (optional) ✓"
 	@echo ""
-	@echo "=== Phase 6: Static Analysis ==="
+	@echo "Phase 6 Status: ✓ Complete"
+	@echo "  - Exercise 6.1: AST Explorer ✓"
+	@echo "  - Exercise 6.2: Custom Linter ✓"
+	@echo "  - Exercise 6.3: Mock Generator ✓"
+	@echo ""
+	@echo "=== Phase 7: Distributed Systems ==="
 	@echo ""
 	@echo "Learning Objectives:"
-	@echo "  1. go/ast package for parsing Go code"
-	@echo "  2. go/types for type checking"
-	@echo "  3. Custom linter development"
-	@echo "  4. Code generation with templates"
+	@echo "  1. Consensus algorithms (Raft basics)"
+	@echo "  2. Streaming communication patterns"
+	@echo "  3. Leader election mechanisms"
+	@echo "  4. Log replication"
 	@echo ""
 	@echo "Key Files:"
-	@echo "  - pkg/analysis/ast.go            (AST parsing, traversal)"
-	@echo "  - pkg/analysis/linter.go         (Custom linter rules)"
-	@echo "  - pkg/analysis/generator.go      (Code generation)"
-	@echo "  - docs/PHASE6_LEARNING.md        (Learning guide)"
+	@echo "  - pkg/distributed/raft.go         (Raft consensus)"
+	@echo "  - pkg/distributed/stream.go       (Streaming patterns)"
+	@echo "  - pkg/distributed/leader.go       (Leader election)"
+	@echo "  - docs/PHASE7_LEARNING.md         (Learning guide)"
 	@echo ""
 	@echo "Exercises:"
-	@echo "  6.1: AST Explorer"
-	@echo "  6.2: Custom Linter"
-	@echo "  6.3: Mock Generator"
+	@echo "  7.1: Simplified Raft"
+	@echo "  7.2: Streaming Service"
+	@echo "  7.3: Leader Election Service"
 	@echo ""
-	@echo "Run 'make exercise-6-1' to start Exercise 6.1"
+	@echo "Run 'make exercise-7-1' to start Exercise 7.1"
 
 learn-phase1:
 	@echo "=== Phase 1: Foundations (Complete) ==="
@@ -683,6 +688,142 @@ test-analysis:
 	@echo "Testing analysis package..."
 	@go test -race -v ./pkg/analysis/...
 
+# === Phase 7: Distributed Systems Exercises ===
+
+learn-phase7:
+	@echo "=== Phase 7: Distributed Systems ==="
+	@echo ""
+	@echo "Learning Objectives:"
+	@echo "  1. Consensus algorithms (Raft basics)"
+	@echo "  2. Streaming communication patterns"
+	@echo "  3. Leader election mechanisms"
+	@echo "  4. Log replication"
+	@echo ""
+	@echo "Key Files:"
+	@echo "  - pkg/distributed/raft.go         (Raft consensus)"
+	@echo "  - pkg/distributed/stream.go       (Streaming patterns)"
+	@echo "  - pkg/distributed/leader.go       (Leader election)"
+	@echo "  - docs/PHASE7_LEARNING.md         (Learning guide)"
+	@echo ""
+	@echo "Key Concepts:"
+	@echo "  - Raft state machine (Follower/Candidate/Leader)"
+	@echo "  - Log entries and terms"
+	@echo "  - RequestVote and AppendEntries RPCs"
+	@echo "  - Stream types (Unary, Server, Client, Bidirectional)"
+	@echo "  - Lease-based leader election"
+	@echo "  - Fencing tokens for safety"
+
+exercise-7-1:
+	@echo "=== Exercise 7.1: Simplified Raft ==="
+	@echo ""
+	@echo "Objective: Implement core Raft consensus mechanics"
+	@echo ""
+	@echo "Requirements:"
+	@echo "  - Node state transitions (Follower → Candidate → Leader)"
+	@echo "  - RequestVote RPC with term checking"
+	@echo "  - AppendEntries RPC with log consistency"
+	@echo "  - Heartbeat mechanism"
+	@echo "  - Basic log entry append and replication"
+	@echo ""
+	@echo "File to edit: pkg/distributed/raft.go"
+	@echo "Test file: pkg/distributed/raft_test.go"
+	@echo ""
+	@echo "Verify with: make verify-7-1"
+	@echo "Benchmark with: make bench-raft"
+
+exercise-7-2:
+	@echo "=== Exercise 7.2: Streaming Service ==="
+	@echo ""
+	@echo "Objective: Implement generic streaming primitives"
+	@echo ""
+	@echo "Requirements:"
+	@echo "  - Generic Stream[T] interface"
+	@echo "  - Channel-based stream implementation"
+	@echo "  - Server-side streaming (one-to-many)"
+	@echo "  - Client-side streaming (many-to-one)"
+	@echo "  - Bidirectional streaming"
+	@echo "  - Flow control with backpressure"
+	@echo ""
+	@echo "File to edit: pkg/distributed/stream.go"
+	@echo "Test file: pkg/distributed/stream_test.go"
+	@echo ""
+	@echo "Verify with: make verify-7-2"
+	@echo "Benchmark with: make bench-stream"
+
+exercise-7-3:
+	@echo "=== Exercise 7.3: Leader Election Service ==="
+	@echo ""
+	@echo "Objective: Implement lease-based leader election"
+	@echo ""
+	@echo "Requirements:"
+	@echo "  - LeaseStore interface (acquire, renew, release)"
+	@echo "  - In-memory lease store for testing"
+	@echo "  - Leader observer notifications"
+	@echo "  - Fencing tokens for split-brain prevention"
+	@echo "  - Leadership transfer support"
+	@echo ""
+	@echo "File to edit: pkg/distributed/leader.go"
+	@echo "Test file: pkg/distributed/leader_test.go"
+	@echo ""
+	@echo "Verify with: make verify-7-3"
+	@echo "Benchmark with: make bench-leader"
+
+verify-7-1:
+	@echo "Verifying Exercise 7.1..."
+	@go test -race -v -run TestRaftNodeCreation ./pkg/distributed/...
+	@go test -race -v -run TestRaftStateTransitions ./pkg/distributed/...
+	@go test -race -v -run TestRaftRequestVote ./pkg/distributed/...
+	@go test -race -v -run TestRaftAppendEntries ./pkg/distributed/...
+	@go test -race -v -run TestRaftLogAppend ./pkg/distributed/...
+	@go test -race -v -run TestRaftElectionTimeout ./pkg/distributed/...
+	@echo ""
+	@echo "✓ Exercise 7.1 verified!"
+
+verify-7-2:
+	@echo "Verifying Exercise 7.2..."
+	@go test -race -v -run TestChannelStream ./pkg/distributed/...
+	@go test -race -v -run TestStreamPair ./pkg/distributed/...
+	@go test -race -v -run TestFlowControlled ./pkg/distributed/...
+	@go test -race -v -run TestServerStream ./pkg/distributed/...
+	@go test -race -v -run TestClientStream ./pkg/distributed/...
+	@go test -race -v -run TestBidiStream ./pkg/distributed/...
+	@echo ""
+	@echo "✓ Exercise 7.2 verified!"
+
+verify-7-3:
+	@echo "Verifying Exercise 7.3..."
+	@go test -race -v -run TestMemoryLeaseStore ./pkg/distributed/...
+	@go test -race -v -run TestLeaderElection ./pkg/distributed/...
+	@go test -race -v -run TestFenceToken ./pkg/distributed/...
+	@go test -race -v -run TestFencedServer ./pkg/distributed/...
+	@go test -race -v -run TestLeaderAware ./pkg/distributed/...
+	@go test -race -v -run TestTransferLeadership ./pkg/distributed/...
+	@echo ""
+	@echo "✓ Exercise 7.3 verified!"
+
+# Test all Phase 7 distributed code
+test-distributed:
+	@echo "Testing distributed package..."
+	@go test -race -v ./pkg/distributed/...
+
+# Benchmark Phase 7 packages
+bench-distributed:
+	@echo "Running distributed benchmarks..."
+	@go test -bench=. -benchmem ./pkg/distributed/...
+
+bench-raft:
+	@echo "Running Raft benchmarks..."
+	@go test -bench=BenchmarkRaft -benchmem ./pkg/distributed/...
+
+bench-stream:
+	@echo "Running stream benchmarks..."
+	@go test -bench=BenchmarkStream -benchmem ./pkg/distributed/...
+
+bench-leader:
+	@echo "Running leader election benchmarks..."
+	@go test -bench=BenchmarkLease -benchmem ./pkg/distributed/...
+	@go test -bench=BenchmarkFenced -benchmem ./pkg/distributed/...
+
 # Benchmark Phase 5 packages
 bench-systems:
 	@echo "Running systems benchmarks..."
@@ -786,6 +927,7 @@ help:
 	@echo "  make test-perf      Run performance tests"
 	@echo "  make test-systems   Run systems programming tests"
 	@echo "  make test-analysis  Run static analysis tests"
+	@echo "  make test-distributed Run distributed systems tests"
 	@echo "  make bench          Run benchmarks"
 	@echo "  make coverage       Show coverage in browser"
 	@echo ""
@@ -801,6 +943,7 @@ help:
 	@echo "  make learn-phase4   Review Phase 4 materials"
 	@echo "  make learn-phase5   Review Phase 5 materials"
 	@echo "  make learn-phase6   Review Phase 6 materials"
+	@echo "  make learn-phase7   Review Phase 7 materials"
 	@echo ""
 	@echo "Phase 1 Exercises (Foundations):"
 	@echo "  make exercise-1-1   Retry with exponential backoff"
@@ -848,12 +991,21 @@ help:
 	@echo "  make verify-6-2     Verify Exercise 6.2"
 	@echo "  make verify-6-3     Verify Exercise 6.3"
 	@echo ""
+	@echo "Phase 7 Exercises (Distributed Systems):"
+	@echo "  make exercise-7-1   Simplified Raft consensus"
+	@echo "  make exercise-7-2   Streaming service"
+	@echo "  make exercise-7-3   Leader election service"
+	@echo "  make verify-7-1     Verify Exercise 7.1"
+	@echo "  make verify-7-2     Verify Exercise 7.2"
+	@echo "  make verify-7-3     Verify Exercise 7.3"
+	@echo ""
 	@echo "Performance:"
 	@echo "  make bench-perf     Run all performance benchmarks"
 	@echo "  make bench-pool     Run pool benchmarks"
 	@echo "  make bench-json     Run JSON benchmarks"
 	@echo "  make bench-alloc    Run allocation benchmarks"
 	@echo "  make bench-systems  Run systems benchmarks"
+	@echo "  make bench-distributed Run distributed benchmarks"
 	@echo "  make escape-analysis Show escape analysis"
 	@echo "  make cpu-profile    Generate CPU profile"
 	@echo "  make mem-profile    Generate memory profile"
