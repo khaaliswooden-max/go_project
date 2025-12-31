@@ -15,9 +15,7 @@ type mockTransport struct {
 	nodes map[string]*RaftNode
 	mu    sync.RWMutex
 
-	// For injecting failures
-	dropRate    float64
-	delayMs     int
+	// For simulating network partitions
 	partitioned map[string]map[string]bool
 }
 
@@ -32,23 +30,6 @@ func (t *mockTransport) register(node *RaftNode) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	t.nodes[node.config.NodeID] = node
-}
-
-func (t *mockTransport) partition(from, to string) {
-	t.mu.Lock()
-	defer t.mu.Unlock()
-	if t.partitioned[from] == nil {
-		t.partitioned[from] = make(map[string]bool)
-	}
-	t.partitioned[from][to] = true
-}
-
-func (t *mockTransport) heal(from, to string) {
-	t.mu.Lock()
-	defer t.mu.Unlock()
-	if t.partitioned[from] != nil {
-		delete(t.partitioned[from], to)
-	}
 }
 
 func (t *mockTransport) isPartitioned(from, to string) bool {

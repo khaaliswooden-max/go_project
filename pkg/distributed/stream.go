@@ -72,10 +72,6 @@ type ChannelStream[T any] struct {
 	cancel context.CancelFunc
 	closed int32
 	mu     sync.Mutex
-
-	// For tracking errors
-	sendErr atomic.Value
-	recvErr atomic.Value
 }
 
 // NewChannelStream creates a new bidirectional channel stream.
